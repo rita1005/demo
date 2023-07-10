@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dao.entity.AccountEntity;
+import com.example.demo.dao.entity.Account;
 import com.example.demo.dao.repository.AccountRepository;
 import com.example.demo.enums.StatusCode;
 import com.example.demo.service.ChangePasswordService;
@@ -21,12 +21,12 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
 
         String encodedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
-        AccountEntity accountEntity = accountRepository.getById(Long.parseLong(id));
-        boolean isPasswordMatch = BCrypt.checkpw(oldPassword, accountEntity.getPassword());
+        Account account = accountRepository.getById(Long.parseLong(id));
+        boolean isPasswordMatch = BCrypt.checkpw(oldPassword, account.getPassword());
 
         if (isPasswordMatch) {
-            accountEntity.setPassword(encodedPassword);
-            accountRepository.save(accountEntity);
+            account.setPassword(encodedPassword);
+            accountRepository.save(account);
         } else {
             return StatusCode.InvalidOldPassword;
         }

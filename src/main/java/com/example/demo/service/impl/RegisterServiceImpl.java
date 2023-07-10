@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dao.entity.AccountEntity;
+import com.example.demo.dao.entity.Account;
 import com.example.demo.dao.repository.AccountRepository;
 import com.example.demo.dto.AccountDto;
 import com.example.demo.enums.StatusCode;
@@ -25,10 +25,8 @@ public class RegisterServiceImpl implements RegisterService {
 
         String encodedPassword = BCrypt.hashpw(accountDTO.getPassword(), BCrypt.gensalt());
 
-        AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setUsername(accountDTO.getUsername());
-        accountEntity.setPassword(encodedPassword);
-        accountRepository.save(accountEntity);
+        Account account = new Account(accountDTO.getUsername(), encodedPassword);
+        accountRepository.save(account);
 
         return StatusCode.Created;
     }

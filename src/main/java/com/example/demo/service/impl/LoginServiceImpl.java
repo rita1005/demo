@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dao.entity.AccountEntity;
+import com.example.demo.dao.entity.Account;
 import com.example.demo.dao.mapper.AccountMapper;
 import com.example.demo.dto.AccountDto;
 import com.example.demo.enums.StatusCode;
@@ -23,16 +23,16 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Map<String, Object> login(AccountDto accountDTO) {
 
-        Optional<AccountEntity> accountEntity = accountMapper.queryByUsername(accountDTO.getUsername());
-        if(accountEntity.isEmpty()) {
+        Optional<Account> account = accountMapper.queryByUsername(accountDTO.getUsername());
+        if(account.isEmpty()) {
             return Map.of("statusCode", StatusCode.InvalidData);
         }
 
-        boolean isPasswordMatch = BCrypt.checkpw(accountDTO.getPassword(), accountEntity.get().getPassword());
+        boolean isPasswordMatch = BCrypt.checkpw(accountDTO.getPassword(), account.get().getPassword());
 
         Map<String, Object> map =new HashMap<String, Object>();
         if (isPasswordMatch) {
-            String token = JwtUtil.generateToken(accountEntity.get().getId().toString());
+            String token = JwtUtil.generateToken(account.get().getId().toString());
             map.put("statusCode", StatusCode.LoginSuccess);
             map.put("token", token);
         } else {

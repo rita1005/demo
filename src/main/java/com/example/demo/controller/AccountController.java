@@ -80,7 +80,9 @@ public class AccountController {
             if (oldPassword.equals(newPassword)) {
                 return generateResponse(StatusCode.SamePassword);
             }
+
             StatusCode statusCode = changePasswordService.changePassword(id, oldPassword, newPassword);
+
             return generateResponse(statusCode);
         } catch (Exception e) {
             return generateResponse(StatusCode.UnknownError);

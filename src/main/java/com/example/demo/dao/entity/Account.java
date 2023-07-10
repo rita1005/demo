@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "account")
-public class AccountEntity {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -12,6 +12,14 @@ public class AccountEntity {
     private String username;
     @Column(name = "password", columnDefinition =  "VARCHAR(200) NOT NULL")
     private String password;
+
+    public Account() {
+    }
+
+    public Account(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;

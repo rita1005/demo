@@ -1,13 +1,13 @@
 package com.example.demo.dao.repository;
 
-import com.example.demo.dao.entity.AccountEntity;
+import com.example.demo.dao.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Optional<AccountEntity> findByUsername(String username);
+    Optional<Account> findByUsername(String username);
 }
