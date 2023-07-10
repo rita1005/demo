@@ -20,13 +20,22 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        ParameterBuilder jwt = new ParameterBuilder();
         List<Parameter> par = new ArrayList<Parameter>();
+
+        ParameterBuilder jwt = new ParameterBuilder();
         jwt.name("Authorization").description("jwt token")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
                 .required(false);
         par.add(jwt.build());
+
+        ParameterBuilder language = new ParameterBuilder();
+        language.name("Accept-Language").description("language")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false);
+        par.add(language.build());
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())

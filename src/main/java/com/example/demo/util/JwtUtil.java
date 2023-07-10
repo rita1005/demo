@@ -25,7 +25,7 @@ public class JwtUtil {
         try {
             Jwts.parser()
                     .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token.replace("Bearer ", ""));
             return true;
         } catch (Exception e) {
             return false;
@@ -35,13 +35,11 @@ public class JwtUtil {
     public static Authentication getAuthentication(String token) {
         String id = "";
         try {
-            Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token.replace("Bearer ", "")).getBody();
             id = claims.get("id", String.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         return new UsernamePasswordAuthenticationToken(id, null, null);
     }
 }

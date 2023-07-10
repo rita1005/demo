@@ -18,23 +18,21 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
 
     @Override
     public StatusCode changePassword(String id, String oldPassword, String newPassword) {
-        try {
-            String encodedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
-            AccountEntity accountEntity = accountRepository.getById(Long.parseLong(id));
-            Boolean passwordMatches = BCrypt.checkpw(oldPassword, accountEntity.getPassword());
+        String encodedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
-            if (passwordMatches) {
-                accountEntity.setPassword(encodedPassword);
-                accountRepository.save(accountEntity);
-            } else {
-                return StatusCode.InvalidOldPassword;
-            }
+        AccountEntity accountEntity = accountRepository.getById(Long.parseLong(id));
+        boolean isPasswordMatch = BCrypt.checkpw(oldPassword, accountEntity.getPassword());
 
-            return StatusCode.ChangePasswordSuccess;
-        } catch (Exception e) {
-            return StatusCode.UnknownError;
+        if (isPasswordMatch) {
+            accountEntity.setPassword(encodedPassword);
+            accountRepository.save(accountEntity);
+        } else {
+            return StatusCode.InvalidOldPassword;
         }
+
+        return StatusCode.ChangePasswordSuccess;
+
 
     }
 }

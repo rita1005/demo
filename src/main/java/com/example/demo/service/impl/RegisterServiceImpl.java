@@ -19,23 +19,18 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public StatusCode register(AccountDto accountDTO) {
-        try {
-            if (accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
-                return StatusCode.ExistingAccount;
-            }
-
-            String encodedPassword = BCrypt.hashpw(accountDTO.getPassword(), BCrypt.gensalt());
-
-            AccountEntity accountEntity = new AccountEntity();
-            accountEntity.setUsername(accountDTO.getUsername());
-            accountEntity.setPassword(encodedPassword);
-            accountRepository.save(accountEntity);
-
-            return StatusCode.Created;
-        } catch (Exception e) {
-            return StatusCode.UnknownError;
+        if (accountRepository.findByUsername(accountDTO.getUsername()).isPresent()) {
+            return StatusCode.ExistingAccount;
         }
 
+        String encodedPassword = BCrypt.hashpw(accountDTO.getPassword(), BCrypt.gensalt());
+
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setUsername(accountDTO.getUsername());
+        accountEntity.setPassword(encodedPassword);
+        accountRepository.save(accountEntity);
+
+        return StatusCode.Created;
     }
 
 

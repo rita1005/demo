@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +26,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         String token = httpServletRequest.getHeader("Authorization");
         if (token != null && JwtUtil.validateToken(token)) {
-            Authentication authentication = JwtUtil.getAuthentication(token);
+            final Authentication authentication = JwtUtil.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);

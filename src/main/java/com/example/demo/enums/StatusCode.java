@@ -9,7 +9,7 @@ public enum StatusCode {
     ExistingAccount(-2, "username.already.exists"),
     SamePassword(-3, "same.password"),
     UnknownError(-4, "unknown.error"),
-    InvalidOldPassword(-5,"wrong.old.password");
+    InvalidOldPassword(-5,"invalid.old.password");
 
 
     private Integer status;
