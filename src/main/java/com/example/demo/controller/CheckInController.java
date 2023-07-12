@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.vo.CommonResponse;
 import com.example.demo.service.CheckInService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +20,11 @@ public class CheckInController {
         this.checkInService = checkInService;
     }
 
-    public ResponseEntity checkIn() {
-        Long id = (Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @PostMapping("/check-in")
+    public ResponseEntity<String> checkIn() {
+        Long id = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         LocalDateTime currentTime = LocalDateTime.now();
         checkInService.checkIn(id, currentTime);
-        return (ResponseEntity) ResponseEntity.status(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body("Check-in successful");
     }
 }

@@ -18,7 +18,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return !"/api/changePassword".equals(path);
+        return "/api/register".equals(path) || "/api/login".equals(path);
     }
 
     @Override

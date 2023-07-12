@@ -10,7 +10,6 @@ import com.example.demo.service.RegisterService;
 import com.example.demo.util.Translator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/api")
 public class AccountController {
 
-    private final ResourceBundleMessageSource messageSource;
 
     private final RegisterService registerService;
 
@@ -34,11 +32,9 @@ public class AccountController {
 
     private final ChangePasswordService changePasswordService;
 
-    public AccountController(ResourceBundleMessageSource messageSource,
-                             RegisterService registerService,
+    public AccountController(RegisterService registerService,
                              LoginService loginService,
                              ChangePasswordService changePasswordService) {
-        this.messageSource = messageSource;
         this.registerService = registerService;
         this.loginService = loginService;
         this.changePasswordService = changePasswordService;

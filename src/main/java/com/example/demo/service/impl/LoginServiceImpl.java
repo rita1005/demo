@@ -8,7 +8,6 @@ import com.example.demo.service.LoginService;
 import com.example.demo.util.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service

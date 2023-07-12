@@ -10,8 +10,9 @@ public class CheckIn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", columnDefinition = "INT NOT NULL")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "check_in_time", columnDefinition = "INT NOT NULL")
     private LocalDateTime checkInTime;
@@ -19,8 +20,8 @@ public class CheckIn {
     public CheckIn() {
     }
 
-    public CheckIn(Long userId, LocalDateTime checkInTime) {
-        this.userId = userId;
+    public CheckIn(Account account, LocalDateTime checkInTime) {
+        this.account = account;
         this.checkInTime = checkInTime;
     }
 
@@ -32,12 +33,12 @@ public class CheckIn {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public LocalDateTime getCheckInTime() {

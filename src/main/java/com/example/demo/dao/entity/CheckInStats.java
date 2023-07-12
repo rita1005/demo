@@ -9,8 +9,9 @@ public class CheckInStats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", columnDefinition = "INT NOT NULL")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "time_difference", columnDefinition = "INT NOT NULL")
     private Long timeDifference;
@@ -18,8 +19,8 @@ public class CheckInStats {
     public CheckInStats() {
     }
 
-    public CheckInStats(Long userId, Long timeDifference) {
-        this.userId = userId;
+    public CheckInStats(Account account, Long timeDifference) {
+        this.account = account;
         this.timeDifference = timeDifference;
     }
 
@@ -31,12 +32,12 @@ public class CheckInStats {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Long getTimeDifference() {

@@ -16,8 +16,8 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("id", id)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TIME))
+                .setIssuedAt(new Date(nowMillis))
+                .setExpiration(new Date(nowMillis + EXPIRE_TIME))
                 .compact();
     }
 
