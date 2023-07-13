@@ -27,4 +27,9 @@ public class CheckInController {
         checkInService.checkIn(id, currentTime);
         return ResponseEntity.status(HttpStatus.OK).body("Check-in successful");
     }
+
+    @PostMapping("/errorCheck-in")
+    public ResponseEntity<String> errorCheckIn() {
+        throw new RuntimeException();
+    }
 }

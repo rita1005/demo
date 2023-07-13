@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Api(tags = "ALL API")
@@ -86,14 +89,14 @@ public class AccountController {
     }
 
     private ResponseEntity<CommonResponse<?>> generateResponse(StatusCode statusCode, String... args) {
-        String[] array = new String[args.length + 1];
+        List<String> list = new ArrayList<>();
         String msg = Translator.toLocale(statusCode.getDescription());
-        array[0] = msg;
-        System.arraycopy(args, 0, array, 1, args.length);
+        list.add(msg);
+        list.addAll(Arrays.asList(args));
 
         CommonResponse<?> res = (statusCode.getStatus() < 0)
                 ? new CommonResponse<>(statusCode.getStatus(), msg, null)
-                : new CommonResponse<>(statusCode.getStatus(), null, array);
+                : new CommonResponse<>(statusCode.getStatus(), null, list);
 
         switch(statusCode) {
             case Created:

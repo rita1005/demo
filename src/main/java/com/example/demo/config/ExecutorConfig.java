@@ -13,7 +13,8 @@ public class ExecutorConfig {
     public Executor checkInExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(8);
-        executor.setThreadNamePrefix("checkInTask-");
+        executor.setCorePoolSize(8);
+        executor.setThreadNamePrefix("checkInExecutor-");
         executor.initialize();
         return executor;
     }

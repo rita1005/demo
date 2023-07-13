@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.example.demo.component.filter;
 
 import com.example.demo.util.JwtUtil;
 import org.springframework.security.core.Authentication;
