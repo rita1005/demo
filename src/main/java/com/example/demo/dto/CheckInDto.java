@@ -5,9 +5,16 @@ import com.example.demo.dao.entity.Account;
 import java.time.LocalDateTime;
 
 public class CheckInDto {
+
     private Account account;
     private LocalDateTime firstCheckInTime;
     private LocalDateTime lastCheckInTime;
+
+    public CheckInDto(Account account, LocalDateTime firstCheckInTime, LocalDateTime lastCheckInTime) {
+        this.account = account;
+        this.firstCheckInTime = firstCheckInTime;
+        this.lastCheckInTime = lastCheckInTime;
+    }
 
     public Account getAccount() {
         return account;

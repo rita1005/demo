@@ -14,8 +14,10 @@ import java.util.Optional;
 @Repository
 public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
 
-    @Query("SELECT c.userId, MIN(c.checkInTime), MAX(c.checkInTime) FROM CheckIn c " +
-            "WHERE c.checkInTime > :startDate AND c.checkInTime < :endDate GROUP BY c.userId")
+    @Query("SELECT NEW com.example.demo.dto.CheckInDto(c.account, MIN(c.checkInTime), MAX(c.checkInTime)) " +
+            "FROM CheckIn c WHERE c.checkInTime > :startDate AND c.checkInTime < :endDate " +
+            "GROUP BY c.account")
     List<CheckInDto> findUserCheckInTimeInfo(@Param("startDate") LocalDateTime startDate,
                                              @Param("endDate") LocalDateTime endDate);
+
 }

@@ -21,7 +21,8 @@ public class CheckInScheduler {
         this.checkInTask = checkInTask;
     }
 
-    @Scheduled(cron = "0 0 23 * * ?")
+//    @Scheduled(cron = "0 0 23 * * ?")
+    @Scheduled(cron = "0 * * * * *")
     public void scheduleCheckInProcessing() {
         List<CheckInDto> list = checkInRepository
                 .findUserCheckInTimeInfo(LocalDateTime.now().toLocalDate().atStartOfDay(), LocalDateTime.now());
