@@ -30,6 +30,9 @@ public class CheckInController {
 
     @PostMapping("/errorCheck-in")
     public ResponseEntity<String> errorCheckIn() {
-        throw new RuntimeException();
+        Long id = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        LocalDateTime currentTime = LocalDateTime.now();
+        checkInService.errorCheckIn(id, currentTime);
+        return ResponseEntity.status(HttpStatus.OK).body("Check-in successful");
     }
 }

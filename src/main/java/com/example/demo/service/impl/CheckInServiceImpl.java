@@ -5,6 +5,7 @@ import com.example.demo.dao.repository.AccountRepository;
 import com.example.demo.dao.repository.CheckInRepository;
 import com.example.demo.service.CheckInService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -25,4 +26,14 @@ public class CheckInServiceImpl implements CheckInService {
         CheckIn checkIn = new CheckIn(accountRepository.getById(userId), time);
         checkInRepository.save(checkIn);
     }
+
+    @Override
+    @Transactional
+    public void errorCheckIn(Long userId, LocalDateTime time) {
+        CheckIn checkIn = new CheckIn(accountRepository.getById(userId), time);
+        checkInRepository.save(checkIn);
+        throw new RuntimeException();
+    }
+
+
 }
