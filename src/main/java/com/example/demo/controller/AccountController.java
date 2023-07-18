@@ -10,6 +10,8 @@ import com.example.demo.service.RegisterService;
 import com.example.demo.util.Translator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final RegisterService registerService;
 
@@ -47,9 +49,13 @@ public class AccountController {
     @PostMapping("/register")
     public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody AccountDto accountDTO) {
         try {
+            logger.debug("AccountDto:" + accountDTO + ", username:" + accountDTO.getUsername() + ", password:" + accountDTO.getPassword());
+            logger.debug("registerService:" + registerService);
             StatusCode statusCode = registerService.register(accountDTO);
+            logger.debug("StatusCode:" + statusCode);
             return generateResponse(statusCode);
         } catch (Exception e) {
+            logger.debug("register api error:" + e.getMessage());
             return generateResponse(StatusCode.UnknownError);
         }
 
