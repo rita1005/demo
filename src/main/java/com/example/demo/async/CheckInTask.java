@@ -45,7 +45,7 @@ public class CheckInTask {
             checkInStatsRepository.save(stats);
             logger.info("username " + checkInDto.getAccount().getUsername() + " done");
         } catch (Exception e) {
-            logger.error("username " + checkInDto.getAccount().getUsername() + " error");
+            logger.error("username " + checkInDto.getAccount().getUsername() + " error" + e.getMessage());
         }
     }
 }

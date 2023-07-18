@@ -6,6 +6,7 @@ import com.example.demo.dto.CheckInDto;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class CheckInScheduler {
     @Scheduled(cron = "0 * * * * *")
     public void scheduleCheckInProcessing() {
         List<CheckInDto> list = checkInRepository
-                .findUserCheckInTimeInfo(LocalDateTime.now().toLocalDate().atStartOfDay(), LocalDateTime.now());
+                .findUserCheckInTimeInfo(LocalDate.now().atStartOfDay(), LocalDateTime.now());
         checkInTask.checkInTask(list);
 
     }

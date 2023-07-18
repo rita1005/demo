@@ -14,7 +14,7 @@ public class CheckIn {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Account account;
 
-    @Column(name = "check_in_time", columnDefinition = "INT NOT NULL")
+    @Column(name = "check_in_time", columnDefinition = "DATETIME NOT NULL")
     private LocalDateTime checkInTime;
 
     public CheckIn() {

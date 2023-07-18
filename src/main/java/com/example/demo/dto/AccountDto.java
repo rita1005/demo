@@ -14,6 +14,14 @@ public class AccountDto {
     @Pattern(regexp = "^[a-zA-Z0-9]{3,10}", message = "密碼須為長度3到10,大小寫英文或數字的組合")
     private String password;
 
+    public AccountDto() {
+    }
+
+    public AccountDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
