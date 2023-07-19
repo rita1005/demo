@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.controller.AccountController;
+import com.example.demo.controller.CheckInController;
 import com.example.demo.dto.AccountDto;
 import com.example.demo.dto.ChangePasswordDto;
 import com.example.demo.enums.StatusCode;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -31,6 +33,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,6 +48,8 @@ public class ControllerTest {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AccountController accountController;
+    @Autowired
+    private CheckInController checkInController;
     @MockBean
     private RegisterService registerService;
     @MockBean
@@ -70,7 +75,8 @@ public class ControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status", is(StatusCode.Created.getStatus())))
                 .andExpect(jsonPath("$.data[0]",
-                        is(Translator.toLocale(StatusCode.Created.getDescription()))));
+                        is(Translator.toLocale(StatusCode.Created.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
@@ -82,7 +88,8 @@ public class ControllerTest {
                     .content(asJsonString(accountDto)))
                 .andExpect(jsonPath("$.status", is(StatusCode.ExistingAccount.getStatus())))
                 .andExpect(jsonPath("$.errorMessage",
-                        is(Translator.toLocale(StatusCode.ExistingAccount.getDescription()))));
+                        is(Translator.toLocale(StatusCode.ExistingAccount.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
@@ -94,7 +101,8 @@ public class ControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(accountDto)))
                 .andExpect(jsonPath("$.status", is(StatusCode.LoginSuccess.getStatus())))
-                .andExpect(jsonPath("$.data[0]", is(Translator.toLocale(StatusCode.LoginSuccess.getDescription()))));
+                .andExpect(jsonPath("$.data[0]", is(Translator.toLocale(StatusCode.LoginSuccess.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -106,7 +114,8 @@ public class ControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(accountDto)))
                 .andExpect(jsonPath("$.status", is(StatusCode.InvalidData.getStatus())))
-                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.InvalidData.getDescription()))));
+                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.InvalidData.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 
@@ -115,14 +124,15 @@ public class ControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("1", null));
 
-        when(changePasswordService.changePassword(any(String.class), any(String.class), any(String.class)))
+        when(changePasswordService.changePassword(anyString(), anyString(), anyString()))
                 .thenReturn(StatusCode.ChangePasswordSuccess);
 
         mockMvc.perform(post("/api/changePassword")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(new ChangePasswordDto("123", "456"))))
                 .andExpect(jsonPath("$.status", is(StatusCode.ChangePasswordSuccess.getStatus())))
-                .andExpect(jsonPath("$.data[0]", is(Translator.toLocale(StatusCode.ChangePasswordSuccess.getDescription()))));
+                .andExpect(jsonPath("$.data[0]", is(Translator.toLocale(StatusCode.ChangePasswordSuccess.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -130,14 +140,15 @@ public class ControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("1", null));
 
-        when(changePasswordService.changePassword(any(String.class), any(String.class), any(String.class)))
+        when(changePasswordService.changePassword(anyString(), anyString(), anyString()))
                 .thenReturn(StatusCode.InvalidOldPassword);
 
         mockMvc.perform(post("/api/changePassword")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(new ChangePasswordDto("123", "456"))))
                 .andExpect(jsonPath("$.status", is(StatusCode.InvalidOldPassword.getStatus())))
-                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.InvalidOldPassword.getDescription()))));
+                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.InvalidOldPassword.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -149,7 +160,19 @@ public class ControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(new ChangePasswordDto("123", "123"))))
                 .andExpect(jsonPath("$.status", is(StatusCode.SamePassword.getStatus())))
-                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.SamePassword.getDescription()))));
+                .andExpect(jsonPath("$.errorMessage", is(Translator.toLocale(StatusCode.SamePassword.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void checkInTest() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("1", null));
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.checkInController).build();
+
+        mockMvc.perform(post("/api/check-in"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private static String asJsonString(final Object obj) {

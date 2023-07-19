@@ -3,6 +3,8 @@ package com.example.demo.schedule;
 import com.example.demo.async.CheckInTask;
 import com.example.demo.dao.repository.CheckInRepository;
 import com.example.demo.dto.CheckInDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Component
 public class CheckInScheduler {
+    private static final Logger logger = LoggerFactory.getLogger(CheckInScheduler.class);
 
     private final CheckInRepository checkInRepository;
 
@@ -27,6 +30,8 @@ public class CheckInScheduler {
     public void scheduleCheckInProcessing() {
         List<CheckInDto> list = checkInRepository
                 .findUserCheckInTimeInfo(LocalDate.now().atStartOfDay(), LocalDateTime.now());
+        logger.info("checkInDtoList size:" + list.size());
+        list.stream().map(c -> {logger.info(c.getAccount().getUsername());return null;});
         checkInTask.checkInTask(list);
 
     }

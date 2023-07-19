@@ -104,7 +104,7 @@ public class ServiceTest {
         String id = "1";
         String oldPassword = "123";
         String newPassword = "456";
-        String encodedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
         when(accountRepository.getById(Long.parseLong(id))).thenReturn(account);
         when(accountRepository.save(account)).thenReturn(account);
 
