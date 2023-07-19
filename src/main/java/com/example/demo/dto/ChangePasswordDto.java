@@ -13,6 +13,14 @@ public class ChangePasswordDto {
     @Pattern(regexp = "^[a-zA-Z0-9]{3,10}", message = "新密碼須為長度3到10,大小寫英文或數字的組合")
     public String newPassword;
 
+    public ChangePasswordDto() {
+    }
+
+    public ChangePasswordDto(String oldPassword, String newPassword) {
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+    }
+
     public String getOldPassword() {
         return oldPassword;
     }
