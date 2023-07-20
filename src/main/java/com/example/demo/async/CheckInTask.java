@@ -29,8 +29,6 @@ public class CheckInTask {
     }
 
     public void checkInTask(List<CheckInDto> list) {
-        logger.info("checkInDtoList size:" + list.size());
-        list.stream().map(c -> {logger.info(c.getAccount().getUsername());return null;});
         CompletableFuture<?>[] futures =  list.stream()
                 .map(checkInDto -> CompletableFuture.runAsync(() -> calculateCheckInTime(checkInDto), checkInExecutor))
                 .toArray(CompletableFuture[]::new);

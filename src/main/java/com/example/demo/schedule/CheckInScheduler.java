@@ -26,13 +26,13 @@ public class CheckInScheduler {
     }
 
 //    @Scheduled(cron = "0 0 23 * * ?")
-    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void scheduleCheckInProcessing() {
         List<CheckInDto> list = checkInRepository
                 .findUserCheckInTimeInfo(LocalDate.now().atStartOfDay(), LocalDateTime.now());
         logger.info("checkInDtoList size:" + list.size());
-        list.stream().map(c -> {logger.info(c.getAccount().getUsername());return null;});
-        checkInTask.checkInTask(list);
+        list.forEach(c -> logger.info(c.getAccount().getUsername()));
 
+        checkInTask.checkInTask(list);
     }
 }

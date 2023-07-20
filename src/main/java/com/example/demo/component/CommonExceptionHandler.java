@@ -22,7 +22,7 @@ public class CommonExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception e) {
         Long id = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        logger.error("Account id:" + id +" check-in api test");
-        return ResponseEntity.internalServerError().body(" check-in api test completed");
+        logger.error("Account id:" + id +" check-in api test: " + e.getMessage());
+        return ResponseEntity.internalServerError().body("error check-in api test completed");
     }
 }

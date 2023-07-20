@@ -22,18 +22,25 @@ public class CheckInServiceImpl implements CheckInService {
     }
 
     @Override
+    @Transactional
     public void checkIn(Long userId, LocalDateTime time) {
         CheckIn checkIn = new CheckIn(accountRepository.getById(userId), time);
         checkInRepository.save(checkIn);
     }
 
     @Override
-    @Transactional
     public void errorCheckIn(Long userId, LocalDateTime time) {
         CheckIn checkIn = new CheckIn(accountRepository.getById(userId), time);
         checkInRepository.save(checkIn);
-        throw new RuntimeException();
+        throw new RuntimeException("error check-in without @Transactional");
     }
 
+    @Override
+    @Transactional
+    public void secondErrorCheckIn(Long userId, LocalDateTime time) {
+        CheckIn checkIn = new CheckIn(accountRepository.getById(userId), time);
+        checkInRepository.save(checkIn);
+        throw new RuntimeException("error check-in with @Transactional");
+    }
 
 }

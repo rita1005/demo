@@ -6,4 +6,6 @@ public interface CheckInService {
     public void checkIn(Long userId, LocalDateTime time);
 
     public void errorCheckIn(Long userId, LocalDateTime time);
+
+    public void secondErrorCheckIn(Long userId, LocalDateTime time);
 }

@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.example.demo.controller.AccountController;
 import com.example.demo.controller.CheckInController;
 import com.example.demo.dto.AccountDto;
@@ -13,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,6 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -59,10 +65,19 @@ public class ControllerTest {
 
     private AccountDto accountDto;
 
+    private ListAppender<ILoggingEvent> listAppender;
+
+    private final static ObjectMapper objectMapper = new ObjectMapper();
+
     @Before
     public void init() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.accountController).build();
         accountDto = new AccountDto("Eland", "123");
+
+        Logger logger = (Logger) LoggerFactory.getLogger(AccountController.class);
+        listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
     }
 
     @Test
@@ -77,10 +92,12 @@ public class ControllerTest {
                 .andExpect(jsonPath("$.data[0]",
                         is(Translator.toLocale(StatusCode.Created.getDescription()))))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+
+        List<ILoggingEvent> logEvent = listAppender.list;
     }
 
     @Test
-    public void registerFailTest() throws Exception {
+    public void registerFailTest1() throws Exception {
         when(registerService.register(any(AccountDto.class))).thenReturn(StatusCode.ExistingAccount);
 
         mockMvc.perform(post("/api/register")
@@ -90,6 +107,19 @@ public class ControllerTest {
                 .andExpect(jsonPath("$.errorMessage",
                         is(Translator.toLocale(StatusCode.ExistingAccount.getDescription()))))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    public void registerFailTest2() throws Exception {
+        when(registerService.register(any(AccountDto.class))).thenThrow(new RuntimeException());
+
+        mockMvc.perform(post("/api/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(accountDto)))
+                .andExpect(jsonPath("$.status", is(StatusCode.UnknownError.getStatus())))
+                .andExpect(jsonPath("$.errorMessage",
+                        is(Translator.toLocale(StatusCode.UnknownError.getDescription()))))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
     }
 
     @Test
@@ -177,19 +207,10 @@ public class ControllerTest {
 
     private static String asJsonString(final Object obj) {
         try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(obj);
+            return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(registerService);
-        when(registerService.register(accountDto)).thenReturn(StatusCode.Created);
-        StatusCode statusCode = registerService.register(accountDto);
-        assertEquals(StatusCode.Created, statusCode);
     }
 
 }

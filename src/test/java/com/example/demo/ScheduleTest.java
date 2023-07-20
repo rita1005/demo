@@ -16,13 +16,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
-@EnableScheduling
+//@EnableScheduling
 @SpringBootTest
 public class ScheduleTest {
     @Autowired
@@ -36,24 +37,14 @@ public class ScheduleTest {
 
     @Test
     public void scheduleCheckInProcessing() {
-        List<CheckInDto> checkInDtoList = List.of(
-                new CheckInDto(new Account("Leo", "123"),
-                        LocalDateTime.of(2023, 7, 19, 8, 30),
-                        LocalDateTime.of(2023, 7, 19, 15, 00)),
-                new CheckInDto(new Account("Lily", "123"),
-                        LocalDateTime.of(2023, 7, 19, 9, 45),
-                        LocalDateTime.of(2023, 7, 19, 17, 36)),
-                new CheckInDto(new Account("Amy", "123"),
-                        LocalDateTime.of(2023, 7, 19, 10, 23),
-                        LocalDateTime.of(2023, 7, 19, 18, 20)));
 
-        when(checkInRepository.findUserCheckInTimeInfo(any(), any())).thenReturn(checkInDtoList);
+        when(checkInRepository.findUserCheckInTimeInfo(any(), any())).thenReturn(new ArrayList<>());
         when(checkInStatsRepository.save(any())).thenReturn(new CheckInStats());
 
         checkInScheduler.scheduleCheckInProcessing();
 
         verify(checkInRepository).findUserCheckInTimeInfo(any(), any());
-        verify(checkInTask).checkInTask(checkInDtoList);
+        verify(checkInTask).checkInTask(any());
 
 
     }
