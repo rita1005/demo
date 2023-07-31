@@ -1,0 +1,28 @@
+version: '2.0'
+
+services:
+  mysql:
+    container_name: mysql-container
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - C:/path/to/mysql_data:/var/lib/mysql
+      - ./src/main/resources/static/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - my-network
+
+  web:
+    container_name: demo-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+    networks:
+      - my-network
+
+networks:
+  my-network:
